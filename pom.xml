@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.2.5</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.soapassignmnet</groupId>
+	<artifactId>WebService_JG0GNZ</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
+	<name>WebService_JG0GNZ</name>
+	<description>WebService G0GNZ</description>
+
+	<properties>
+		<version.java>21</version.java>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>21</java.version>
+
+		<version.maven.compiler>3.10.1</version.maven.compiler>
+		<version.maven.war>3.3.2</version.maven.war>
+		<version.maven.exec>3.1.0</version.maven.exec>
+		<version.maven.jaxws>4.0.1</version.maven.jaxws>
+		<version.jaxws-rt>4.0.1</version.jaxws-rt>
+
+		<version.kotlin>1.8.10</version.kotlin>
+		<version.kotlin.coroutines>1.6.4</version.kotlin.coroutines>
+		<kotlin.compiler.incremental>true</kotlin.compiler.incremental>
+	</properties>
+
+	<dependencies>
+
+
+		<dependency>
+			<groupId>com.sun.xml.ws</groupId>
+			<artifactId>jaxws-rt</artifactId>
+			<version>${version.jaxws-rt}</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.springframework.ws</groupId>
+			<artifactId>spring-ws-core</artifactId>
+			<version>4.0.10</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-stdlib</artifactId>
+			<version>${version.kotlin}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-reflect</artifactId>
+			<version>${version.kotlin}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jetbrains.kotlinx</groupId>
+			<artifactId>kotlinx-coroutines-core</artifactId>
+			<version>${version.kotlin.coroutines}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>wsdl4j</groupId>
+			<artifactId>wsdl4j</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+
+
+		<plugins>
+			<plugin>
+				<groupId>com.sun.xml.ws</groupId>
+				<artifactId>jaxws-maven-plugin</artifactId>
+				<version>${version.maven.jaxws}</version>
+				<configuration>
+					<wsdlDirectory>${basedir}/src/main/resources/wsdl</wsdlDirectory>
+					<sourceDestDir>${basedir}/target/generated-sources/java</sourceDestDir>
+					<extension>true</extension>
+				</configuration>
+				<executions>
+					<execution>
+						<id>WsImport</id>
+						<goals>
+							<goal>wsimport</goal>
+						</goals>
+						<configuration>
+							<packageName>seatreservation</packageName>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.jetbrains.kotlin</groupId>
+				<artifactId>kotlin-maven-plugin</artifactId>
+				<version>${version.kotlin}</version>
+				<executions>
+					<execution>
+						<id>compile</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+						<configuration>
+							<sourceDirs>
+								<sourceDir>src/main/java</sourceDir>
+								<sourceDir>target/generated-sources/java</sourceDir>
+							</sourceDirs>
+						</configuration>
+					</execution>
+					<execution>
+						<id>test-compile</id>
+						<phase>process-test-sources</phase>
+						<goals>
+							<goal>test-compile</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.jetbrains.kotlin</groupId>
+						<artifactId>kotlin-maven-allopen</artifactId>
+						<version>${version.kotlin}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.jetbrains.kotlin</groupId>
+						<artifactId>kotlin-maven-noarg</artifactId>
+						<version>${version.kotlin}</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<compilerPlugins>
+						<plugin>all-open</plugin>
+						<plugin>no-arg</plugin>
+					</compilerPlugins>
+					<args>
+						<arg>-Xallow-result-return-type</arg>
+						<arg>-Xinline-classes</arg>
+					</args>
+					<pluginOptions>
+						<option>all-open:annotation=javax.jws.WebService</option>
+						<option>all-open:annotation=javax.ws.rs.Path</option>
+						<option>no-arg:annotation=javax.ws.rs.Path</option>
+						<option>no-arg:annotation=javax.xml.bind.annotation.XmlType</option>
+						<option>no-arg:annotation=javax.websocket.server.ServerEndpoint</option>
+					</pluginOptions>
+					<jvmTarget>${version.java}</jvmTarget>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+
+
+
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.jetbrains.kotlin</groupId>
+										<artifactId>kotlin-maven-plugin</artifactId>
+										<versionRange>[${version.kotlin},)</versionRange>
+										<goals>
+											<goal>compile</goal>
+											<goal>test-compile</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+</project>
+
